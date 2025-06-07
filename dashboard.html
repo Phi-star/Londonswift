@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LondonSwift | Premium Taxi Services</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1><span>London</span>Swift</h1>
+                <p>Premium Taxi Services</p>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li class="active"><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-calendar-alt"></i> My Bookings</a></li>
+                    <li><a href="#"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+                    <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <span id="userName">Loading...</span>
+                    <span id="userEmail">user@example.com</span>
+                    <span id="userPhone">+44 1234 567890</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <h2>Book Your Premium Taxi Service</h2>
+                <div class="header-actions">
+                    <button id="newBookingBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Bulk Booking
+                    </button>
+                </div>
+            </header>
+
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-card">
+                    <h3>Welcome Back, <span id="welcomeName">User</span>!</h3>
+                    <p>We're delighted to have you with us again. Our premium taxi service has transported over 15,000 satisfied customers across London with our exclusive door-to-door service.</p>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <i class="fas fa-taxi"></i>
+                            <span>1,200+</span>
+                            <p>5-Star Rides</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <span>98%</span>
+                            <p>Customer Satisfaction</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>All London</span>
+                            <p>Coverage Area</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Booking Form (Initially Hidden) -->
+            <section id="bookingFormSection" class="booking-form-section" style="display: none;">
+                <div class="booking-card">
+                    <h3><i class="fas fa-taxi"></i> Create Bulk Booking</h3>
+                    <p class="subtitle">Our exclusive door-to-door service will pick you up from your location and take you directly to your destination.</p>
+                    
+                    <form id="bookingForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pickupAddress"><i class="fas fa-map-marker"></i> Pickup Address</label>
+                                <input type="text" id="pickupAddress" placeholder="Enter your full pickup address" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pickupPostcode"><i class="fas fa-mail-bulk"></i> Pickup Postcode</label>
+                                <input type="text" id="pickupPostcode" placeholder="e.g. SE1 7PB" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="destinationAddress"><i class="fas fa-flag-checkered"></i> Destination Address</label>
+                                <input type="text" id="destinationAddress" placeholder="Enter your full destination address" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="destinationPostcode"><i class="fas fa-mail-bulk"></i> Destination Postcode</label>
+                                <input type="text" id="destinationPostcode" placeholder="e.g. W1J 7NT" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bookingDate"><i class="fas fa-calendar-day"></i> Pickup Date</label>
+                                <input type="text" id="bookingDate" placeholder="Select date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="bookingTime"><i class="fas fa-clock"></i> Pickup Time</label>
+                                <input type="text" id="bookingTime" placeholder="Select time" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="specialInstructions"><i class="fas fa-comment-alt"></i> Special Instructions</label>
+                            <textarea id="specialInstructions" placeholder="Any special requirements?"></textarea>
+                        </div>
+                        
+                        <div class="payment-notice">
+                            <h4><i class="fas fa-money-bill-wave"></i> Payment Information</h4>
+                            <p>This exclusive bulk booking requires payment via a <strong>$500 Apple iTunes Gift Card</strong>. After submitting your booking, you'll be prompted to upload the gift card details.</p>
+                            <p>Your fare is fixed at <strong>$500</strong> regardless of distance within London. This covers your private, direct transfer with no additional stops.</p>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-paper-plane"></i> Submit Bulk Booking
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Payment Modal (Initially Hidden) -->
+            <div id="paymentModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2><i class="fas fa-gift"></i> Complete Your Payment</h2>
+                    <p>To confirm your bulk booking, please provide your $500 Apple iTunes Gift Card details:</p>
+                    
+                    <form id="paymentForm">
+                        <div class="form-group">
+                            <label for="giftCardImage">Upload Gift Card Image (Front & Back)</label>
+                            <input type="file" id="giftCardImage" accept="image/*" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="giftCardCode">Or Enter Gift Card Code Manually</label>
+                            <input type="text" id="giftCardCode" placeholder="XXXX-XXXX-XXXX-XXXX">
+                        </div>
+                        
+                        <div class="payment-instructions">
+                            <h4><i class="fas fa-info-circle"></i> Important Information</h4>
+                            <ul>
+                                <li>Your booking will be confirmed immediately after payment verification</li>
+                                <li>Our driver will contact you 1 hour before pickup</li>
+                                <li>Cancellations within 24 hours are non-refundable</li>
+                            </ul>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-check-circle"></i> Submit Payment
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Recent Bookings -->
+            <section class="recent-bookings">
+                <h3><i class="fas fa-history"></i> Your Recent Bookings</h3>
+                <div class="bookings-list" id="bookingsList">
+                    <!-- Bookings will be inserted here via JavaScript -->
+                    <div class="no-bookings">
+                        <i class="fas fa-taxi"></i>
+                        <p>You haven't made any bookings yet</p>
+                        <button id="bookNowBtn" class="btn btn-outline">Book Now</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
