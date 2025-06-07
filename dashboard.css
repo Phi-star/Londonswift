@@ -550,6 +550,33 @@ nav li.active a {
     background-color: #d1ecf1;
     color: #0c5460;
 }
+/* Add these new styles to your existing dashboard.css */
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-info span:first-child {
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.user-info span:nth-child(2) {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.user-info span:last-child {
+    font-size: 0.8rem;
+    color: var(--gray);
+}
+
+.welcome-card h3 span {
+    color: var(--secondary);
+    }
 
 /* Responsive Design */
 @media (max-width: 992px) {
