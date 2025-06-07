@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LondonSwift | Taxi Services Across London</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1><span>London</span>Swift</h1>
+                <p>Premium Taxi Services Across London</p>
+            </div>
+        </header>
+
+        <div class="auth-container">
+            <!-- Login Form -->
+            <div id="loginForm" class="form-container">
+                <h2>Sign In</h2>
+                <form>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                    <p class="toggle-form">Don't have an account? <a href="#" id="showRegister">Sign Up</a></p>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="form-container" style="display: none;">
+                <h2>Create Account</h2>
+                <form>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="reg-email" placeholder="Email Address" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="reg-phone" placeholder="Phone Number" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="reg-password" placeholder="Password" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="reg-confirm" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                    <p class="toggle-form">Already have an account? <a href="#" id="showLogin">Sign In</a></p>
+                </form>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-taxi"></i>
+                <h3>24/7 Service</h3>
+                <p>Available round the clock across London</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-pound-sign"></i>
+                <h3>Fixed Prices</h3>
+                <p>No surge pricing, know your fare upfront</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-user-shield"></i>
+                <h3>Verified Drivers</h3>
+                <p>All drivers fully licensed and DBS checked</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Success</h2>
+            <p id="modalMessage">Account created successfully!</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
